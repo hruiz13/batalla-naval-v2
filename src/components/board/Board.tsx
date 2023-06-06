@@ -30,31 +30,31 @@ export const Board: React.FC<BoardProps> = ({
           Object.values(allBoats).map((boat, index) => {
             return (
               <div
-              draggable={true}
-              key={`${index}-map`}
-              onDragStart={(e) => handleStartDrag(e, boat.name)}
-              onDragEnd={(e) => handleEndDrag(e, boat.name)}
-              ref={(r) => handleReferences(r, boat.name)}
-              onClick={() => handleAlign(boat.name)}
-              style={{
-                position: 'fixed',
-                left: boat.x,
-                top: boat.y,
-                transform: boat.vertical ? 'rotate(-90deg)' : '',
-                minWidth: boat.wParts * SPOT_SIZE,
-                minHeight: boat.wParts * SPOT_SIZE,
-                display: boat.spot !== undefined ? 'none' : 'block',
-                zIndex: 11
-              }}
-              onDrag={(e) => handleDrag(e, boat.name)}
+                draggable={true}
+                key={`${index}-map`}
+                onDragStart={(e) => handleStartDrag(e, boat.name)}
+                onDragEnd={(e) => handleEndDrag(e, boat.name)}
+                ref={(r) => handleReferences(r, boat.name)}
+                onClick={() => handleAlign(boat.name)}
+                style={{
+                  position  : 'fixed',
+                  left      : boat.x,
+                  top       : boat.y,
+                  transform : boat.vertical ? 'rotate(-90deg)' : '',
+                  minWidth  : boat.wParts * SPOT_SIZE,
+                  minHeight : boat.wParts * SPOT_SIZE,
+                  display   : boat.spot !== undefined ? 'none' : 'block',
+                  zIndex    : 11
+                }}
+                onDrag={(e) => handleDrag(e, boat.name)}
               >
 
-              <img
-              width={boat.wParts * SPOT_SIZE}
-              height={boat.wParts * SPOT_SIZE}
-              src={boat.image}
-              draggable={false}
-              />
+                <img
+                  width={boat.wParts * SPOT_SIZE}
+                  height={boat.wParts * SPOT_SIZE}
+                  src={boat.image}
+                  draggable={false}
+                />
               </div>
 
             )
@@ -81,22 +81,22 @@ export const Board: React.FC<BoardProps> = ({
                 id={`${name}-${spot.id}`}
                 className={styles.boardSpot}
                 style={{
-                  backgroundColor: waterColor
+                  backgroundColor : waterColor
                 }}
               >
                 <div
-                className={styles.ship}
-                style={{
-                  minWidth: SPOT_SIZE * shipParts,
-                  minHeight: SPOT_SIZE,
-                  transform: isVertical ? `translate(-${verticalXtranslate}px, ${verticalYtranslate}px) rotate(-90deg)` : ''
-                }}
+                  className={styles.ship}
+                  style={{
+                    minWidth  : SPOT_SIZE * shipParts,
+                    minHeight : SPOT_SIZE,
+                    transform : isVertical ? `translate(-${verticalXtranslate}px, ${verticalYtranslate}px) rotate(-90deg)` : ''
+                  }}
                 >
                   <span style={{ position: 'absolute', left: 10, top: 10 }}>{spot.id}</span>
                   <img
-                  src={boat?.image}
-                  width={shipParts * SPOT_SIZE}
-                  height={ SPOT_SIZE}
+                    src={boat?.image}
+                    width={shipParts * SPOT_SIZE}
+                    height={ SPOT_SIZE}
                   />
                 </div>
               </div>

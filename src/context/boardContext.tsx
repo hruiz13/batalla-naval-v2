@@ -16,6 +16,6 @@ const spots: IBoard[] = Array.from(Array(100).keys()).map((num) => {
 })
 
 export const useBoardStore = create<BoardStore>()((set) => ({
-  board: spots,
-  setBoard: (board) => set(() => ({ board }))
+  board    : spots,
+  setBoard : (board) => set(() => ({ board }))
 }))
