@@ -1,0 +1,84 @@
+.homeContainer{
+    max-width: 1440px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+.formContainer{
+    max-width: 400px;
+    background-color: var(--waterAroundShip);
+    color: #fff;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    align-items: center;
+    gap: 15px;
+}
+
+.form{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    align-items: center;
+    gap: 15px;
+}
+
+.input{
+    height: 30px;
+    width: 100%;
+    background-color: var(--water);
+    border: none;
+    border-bottom: 2px solid var(--waterBorder);
+    outline: none;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    color: white;
+}
+
+.input[type=text]:focus{
+    border-bottom: 2px solid white;
+}
+
+.btn{
+    background-color: var(--waterBorder);
+    border: 1px solid transparent;
+    padding: 8px 15px;
+    color: white;
+    transition: 0.5s;
+    cursor: pointer;
+}
+
+.btn:hover{
+    background-color: var(--water);
+    border: 1px solid var(--waterBorder);
+}
+
+.btn:active{
+    background-color: var(--waterBorder);
+}
+
+.btn:disabled{
+    background-color: var(--waterDark);
+}
+
+.cr{
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+dialog{
+    border: 30px solid var(--darkerBlue);
+    background-color: var(--dark);
+    color: var(--blue);
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    align-items: center;
+    min-width: 400px;
+    padding: 0;
+}

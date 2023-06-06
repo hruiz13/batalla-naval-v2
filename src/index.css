@@ -1,0 +1,16 @@
+:root {
+    --water: #275dad;
+    --waterBorder: #225298;
+    --waterWithShip: #2a64b9;
+    --waterAroundShip: #2961b5;
+    --waterDark: #4a628d;
+    --blue: #6cf3f7;
+    --darkerBlue: #04b6b1;
+    --gray: #7d8786;
+    --dark: #2a2532;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+body{
+    background-color: #3c9fbb;
+}

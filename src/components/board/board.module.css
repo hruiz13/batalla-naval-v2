@@ -1,0 +1,28 @@
+.boardContainer{
+    margin: 15px;
+    width: 400px;
+    height: 400px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-gap: 0 0;
+    gap: 0 0;
+    background-color: var(--water)
+}
+
+.boardSpot{
+    position: relative;
+    border: .5px solid var(--waterBorder);
+}
+
+.position{
+    position: relative;
+}
+
+.ship{
+    position:absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+}
