@@ -9,6 +9,8 @@ interface IBoard {
 interface BoardStore {
   board: IBoard[]
   setBoard: (board: IBoard[]) => void
+  playerName: string
+  setPlayerName: (name: string) => void
 }
 
 const spots: IBoard[] = Array.from(Array(100).keys()).map((num) => {
@@ -16,6 +18,9 @@ const spots: IBoard[] = Array.from(Array(100).keys()).map((num) => {
 })
 
 export const useBoardStore = create<BoardStore>()((set) => ({
-  board    : spots,
-  setBoard : (board) => set(() => ({ board }))
+  board         : spots,
+  setBoard      : (board) => set(() => ({ board })),
+  playerName    : '',
+  setPlayerName : (name) => set(() => ({ playerName: name }))
+
 }))

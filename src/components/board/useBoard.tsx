@@ -3,13 +3,15 @@ import { SPOT_SIZE } from '../../config/board'
 
 import { boats } from '../../config/boats'
 import { useBoardStore } from '../../context/boardContext'
-import { IBoats } from '../../types/boards'
+import { IBoat, IBoats } from '../../types/boards'
 import { allowedPosition, calculateOccupiedPositions, calculateAroundPositions } from '../../utils/shipPositions'
 
 export const useBoard = (boardPosition: React.MutableRefObject<HTMLDivElement | null>) => {
   const [allBoats, setAllBoats] = useState<IBoats>(boats)
   const { board, setBoard } = useBoardStore()
   const [shipsIdentifiers, setShipsIdentifiers] = useState<string[]>([])
+  const [shipSelected, setShipSelected] = useState(boats.porta_aviones)
+  const [errorPosition, setErrorPosition] = useState<number[] | undefined>()
 
   const [occupiedPositions, setOccupiedPositions] = useState<number[]>([])
 
@@ -65,7 +67,9 @@ export const useBoard = (boardPosition: React.MutableRefObject<HTMLDivElement | 
   }
 
   const handleEndDrag = (e: DragEvent<HTMLDivElement>, name: string) => {
-    const curentShip = allBoats[name]
+    setErrorPosition(undefined)
+    const curentShip = structuredClone(allBoats[name])
+    const newBoats = structuredClone(allBoats)
 
     if (boardPosition.current === null || curentShip.startDragPosition === undefined) return
 
@@ -78,7 +82,7 @@ export const useBoard = (boardPosition: React.MutableRefObject<HTMLDivElement | 
       return
     }
 
-    allBoats[name].dropPosition = { x: e.pageX, y: e.pageY }
+    newBoats[name].dropPosition = { x: e.pageX, y: e.pageY }
 
     const currentShipPart = curentShip.startDragPosition.part ?? 0
     const spotX = Math.floor((e.pageX - boardPosition.current.offsetLeft) / SPOT_SIZE)
@@ -92,18 +96,23 @@ export const useBoard = (boardPosition: React.MutableRefObject<HTMLDivElement | 
       newPosition = ((spotX) + (spotY * 10)) - ((currentShipPart) * 10)
     }
 
+    calculatePositionAndAround(curentShip, newPosition, newBoats)
+  }
+
+  const calculatePositionAndAround = (curentShip: IBoat, newPosition: number, newBoats: { [x: string]: IBoat }) => {
     const positions = calculateOccupiedPositions(curentShip, newPosition)
     const aroundPositions = calculateAroundPositions(positions)
 
     // check if it's valid position or crash with other ship
-    const isValid = allowedPosition(curentShip, newPosition, [...positions, ...aroundPositions], occupiedPositions)
-    if (!isValid) {
+    const { valid, errorPosition } = allowedPosition(curentShip, newPosition, [...positions, ...aroundPositions], occupiedPositions)
+    if (!valid) {
+      setErrorPosition(errorPosition)
       return
     }
 
-    allBoats[name].spot = newPosition
+    newBoats[curentShip.name].spot = newPosition
     setOccupiedPositions(occupied => [...occupied, ...positions])
-    setAllBoats(structuredClone(allBoats))
+    setAllBoats(structuredClone(newBoats))
 
     // set ships positions on global state
     positions.forEach(position => {
@@ -114,11 +123,26 @@ export const useBoard = (boardPosition: React.MutableRefObject<HTMLDivElement | 
       board[position] = { ...board[position], ship: 'waterAroundShip' }
     })
     setBoard(board)
+
+    const nextShip = Object.values(newBoats).find(boat => boat.spot === undefined)
+    if (nextShip === undefined) {
+      console.log('ready to play')
+    } else {
+      setShipSelected(nextShip)
+    }
+  }
+
+  const handleBoardClick = (spotId: number) => {
+    setErrorPosition(undefined)
+    const newBoats = structuredClone(allBoats)
+    newBoats[shipSelected.name].spot = spotId
+    calculatePositionAndAround(allBoats[shipSelected.name], spotId, newBoats)
   }
 
   const handleAlign = (name: string) => {
-    allBoats[name].vertical = !allBoats[name].vertical
-    setAllBoats(structuredClone(allBoats))
+    const newBoats = structuredClone(allBoats)
+    newBoats[name].vertical = !allBoats[name].vertical
+    setAllBoats(structuredClone(newBoats))
   }
 
   useEffect(() => {
@@ -136,6 +160,10 @@ export const useBoard = (boardPosition: React.MutableRefObject<HTMLDivElement | 
     handleDrag,
     handleEndDrag,
     handleAlign,
-    shipsIdentifiers
+    shipsIdentifiers,
+    setShipSelected,
+    shipSelected,
+    handleBoardClick,
+    errorPosition
   }
 }

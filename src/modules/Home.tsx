@@ -1,14 +1,21 @@
-import { ChangeEvent, FormEvent, useState } from 'react'
+import { ChangeEvent, FormEvent, useState, useEffect } from 'react'
 import { Ripples } from '@uiball/loaders'
+import { socket } from '../socket'
 
 import style from './home.module.css'
 import Logo from '../assets/bn.svg'
 import { Waves } from '../components/waves/Waves'
+import { useLocation } from 'wouter'
+import { useBoardStore } from '../context/boardContext'
 
 export const Home = () => {
+  const [, setLocation] = useLocation()
+  const { setPlayerName } = useBoardStore()
+
   const [userName, setUserName] = useState('')
   const [connectionModal, setConnectionModal] = useState(false)
-  console.log('🚀 ~ file: home.tsx:11 ~ Home ~ connectionModal:', connectionModal)
+  const [isConected, setIsConected] = useState(false)
+  const [hasError, setHasError] = useState(false)
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setUserName(e.target.value)
@@ -18,8 +25,38 @@ export const Home = () => {
     e.preventDefault()
     if (userName === '') return
     setConnectionModal(true)
+    setPlayerName(userName)
+    // timeout of 8 seconds
+    setTimeout(() => {
+      if (!isConected) {
+        setHasError(true)
+      }
+    }, 10000)
+    if (isConected) {
+      setLocation('/board')
+    }
   }
-  console.log('ESTADO', !!userName)
+
+  useEffect(() => {
+    function onConnect () {
+      console.log('Conectado')
+      setIsConected(true)
+    }
+
+    function onDisconnect () {
+      console.log('desconectado')
+      setIsConected(false)
+    }
+
+    socket.on('connect', onConnect)
+    socket.on('disconnect', onDisconnect)
+
+    return () => {
+      socket.off('connect', onConnect)
+      socket.off('disconnect', onDisconnect)
+    }
+  }, [])
+
   return <><div className={style.homeContainer}>
     <img src={Logo} alt="logo batalla naval" width={400} className={style.logo} />
     <h1>Batalla Naval</h1>
@@ -43,7 +80,11 @@ export const Home = () => {
               color="var(--gray)"
             />
           </div>
-          <p>Conectando con el servidor...</p>
+          {
+            hasError
+              ? <p>Ha ocurrido un error, por favor intente mas tarde</p>
+              : <p>Conectando con el servidor...</p>
+          }
           <Waves />
         </dialog>
     }

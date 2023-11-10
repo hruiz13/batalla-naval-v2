@@ -8,9 +8,24 @@
     --darkerBlue: #04b6b1;
     --gray: #7d8786;
     --dark: #2a2532;
+    --white: #efefef;
+    --darkerGreen: #037971;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 body{
     background-color: #3c9fbb;
 }
+
+
+@keyframes blink {
+    80% {
+      background-color:'transparent';
+    }
+    90% {
+        background-color:orange;
+    }
+    100% {
+        background-color:'transparent';
+    }
+  }

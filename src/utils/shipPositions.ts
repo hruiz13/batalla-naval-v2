@@ -19,26 +19,27 @@ export const allowedPosition = (ship: IBoat, position: number, positions: number
   const { wParts, vertical } = ship
 
   // check if ship is inside the board
-  if (position < 0 || position > 99) return false
+  if (position < 0 || position > 99) return { valid: false }
 
   if (vertical) {
     const isNotValid = positions.some(number => number > 99 || number < 0)
-    if (isNotValid) return false
+    if (isNotValid) return { valid: false }
   } else {
     for (let i = position + 1; i < position + wParts; i++) {
       if (i % 10 === 0) {
-        return false
+        return { valid: false }
       }
     }
   }
 
   // Check if crash with other ship
   const isNotValidPosition = occupiedPositions.some((number) => positions.includes(number))
+  const notValidPosition = occupiedPositions.filter((number) => positions.includes(number))
   if (isNotValidPosition) {
-    return false
+    return { valid: false, errorPosition: notValidPosition }
   }
 
-  return true
+  return { valid: true }
 }
 
 export const calculateAroundPositions = (occupiedPositions: number[]) => {

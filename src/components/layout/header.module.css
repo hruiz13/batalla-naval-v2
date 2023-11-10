@@ -1,0 +1,26 @@
+.headerContainer{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1rem;
+    height: 120px;
+    background-color: var(--white);
+    box-shadow: 0 0 10px rgba(216, 216, 216, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.headerAvatar{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    background-color: var(--waterDark);
+    color: var(--white);
+    font-weight: bold;
+    font-size: 20px;
+}

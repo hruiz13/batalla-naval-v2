@@ -7,6 +7,7 @@ interface IPosition {
 interface IBoat {
   id: int
   name: string
+  label: string
   image: string
   wParts: number
   identificator: string

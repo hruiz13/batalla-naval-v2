@@ -10,9 +10,33 @@
     background-color: var(--water)
 }
 
+.h2{
+    margin-left: 15px;
+}
+.h2 h2{
+    margin-bottom: 5px;
+}
+
 .boardSpot{
     position: relative;
     border: .5px solid var(--waterBorder);
+}
+
+.tooltiptext{
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+ 
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 100;
+}
+.boardSpot:hover .tooltiptext{
+    visibility: visible;
 }
 
 .position{
@@ -25,4 +49,63 @@
     justify-content: center;
     align-items: center;
     z-index: 10;
+}
+
+.shipsContainer{
+    display: flex;
+    margin-left: 15px;
+    width: 400px;
+    height: 300px;
+    border: 2px solid var(--waterBorder);
+    padding: 10px;
+}
+
+.shipContainer{
+    justify-content: center;
+    align-items: center;
+    margin: 0 10px;
+    width: 100%;
+    background-color: var(--darkerBlue);
+}
+
+.shipsListContainer{
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 100%;
+    gap: 5px
+}
+
+.shipName{
+    padding: 5px 10px;
+    background-color: var(--water);
+    cursor: pointer;
+    color: var(--white);
+    text-align: center;
+    font-size: 14px;
+}
+.shipName:hover{
+    background-color: var(--waterDark);
+}
+
+.shipInfo{
+    margin-left: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.col{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.col span{
+    font-size: 12px;
+}
+
+.col h4{
+    margin: 2px;
 }
