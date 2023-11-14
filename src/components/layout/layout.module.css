@@ -12,3 +12,9 @@
     -moz-box-sizing: border-box;
     -ms-box-sizing: border-box;
 }
+
+.bodyContainer{
+    display: flex;
+    justify-content: center;
+    max-width: 1440px;
+}

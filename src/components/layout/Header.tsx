@@ -7,7 +7,7 @@ const Header = () => {
   const { playerName } = useBoardStore()
   const lettersPlayerName = useMemo(() => {
     return playerName.split(' ').map((letter, index) => {
-      return <span key={index}>{letter[0].toUpperCase()}</span>
+      return <span key={index}>{letter[0]?.toUpperCase()}</span>
     })
   }, [playerName])
 

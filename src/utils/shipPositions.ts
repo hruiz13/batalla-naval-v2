@@ -22,7 +22,7 @@ export const allowedPosition = (ship: IBoat, position: number, positions: number
   if (position < 0 || position > 99) return { valid: false }
 
   if (vertical) {
-    const isNotValid = positions.some(number => number > 99 || number < 0)
+    const isNotValid = positions.some(number => number > 109 || number < -11)
     if (isNotValid) return { valid: false }
   } else {
     for (let i = position + 1; i < position + wParts; i++) {
@@ -45,8 +45,12 @@ export const allowedPosition = (ship: IBoat, position: number, positions: number
 export const calculateAroundPositions = (occupiedPositions: number[]) => {
   const ocuppied = new Set()
   occupiedPositions.forEach(p => {
-    ocuppied.add(p - 1)
-    ocuppied.add(p + 1)
+    if ((p - 1) % 10 !== 9) {
+      ocuppied.add(p - 1)
+    }
+    if (p % 10 !== 9) {
+      ocuppied.add(p + 1)
+    }
     ocuppied.add(p - 10)
     ocuppied.add(p + 10)
   })
