@@ -1,11 +1,15 @@
 import styles from './board.module.css'
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { SPOT_SIZE } from '../../config/board'
 import { useBoard } from './useBoard'
 import { useBoardStore } from '../../context/boardContext'
+import { useLocation } from 'wouter'
+import { socket } from '../../socket'
 
 export const Board = () => {
   const boardPosition = useRef<HTMLDivElement | null>(null)
+  const [, setLocation] = useLocation()
+  const searchParams = new URLSearchParams(window.location.search)
   const {
     allBoats,
     handleReferences,
@@ -19,7 +23,30 @@ export const Board = () => {
     handleBoardClick,
     errorPosition
   } = useBoard(boardPosition)
-  const { board, playerName } = useBoardStore()
+  const { board, playerName, otherPlayerName, setOtherPlayerName } = useBoardStore()
+
+  useEffect(() => {
+    const roomUuid = searchParams.get('room')
+    if (!roomUuid) {
+      setLocation('/')
+    }
+  }, [])
+
+  useEffect(() => {
+    function onJoinedRoom (data: any) {
+      setOtherPlayerName(data.userName)
+    }
+    function onStartGame (data: any) {
+      console.log('Ambos listos', data)
+    }
+    socket.on('joined_room', onJoinedRoom)
+    socket.on('start_game', onStartGame)
+
+    return () => {
+      socket.off('joined_room', onJoinedRoom)
+      socket.off('start_game', onStartGame)
+    }
+  }, [])
 
   const handleEndDragShip = (e: React.DragEvent<HTMLDivElement>, name: string) => {
     handleEndDrag(e, name)
@@ -27,6 +54,7 @@ export const Board = () => {
 
   return (
     <div >
+      <div>Contrincante: {otherPlayerName}</div>
       <div className={styles.h2}><h2>Mis barcos</h2></div>
       <div className={styles.shipsContainer}>
         <div className={styles.shipsListContainer}>

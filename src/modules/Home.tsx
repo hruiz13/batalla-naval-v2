@@ -10,12 +10,15 @@ import { useBoardStore } from '../context/boardContext'
 
 export const Home = () => {
   const [, setLocation] = useLocation()
-  const { setPlayerName } = useBoardStore()
+  const { setPlayerName, setOtherPlayerName } = useBoardStore()
 
   const [userName, setUserName] = useState('')
   const [connectionModal, setConnectionModal] = useState(false)
   const [isConected, setIsConected] = useState(false)
   const [hasError, setHasError] = useState(false)
+  const [customMessage, setcustomMessage] = useState('')
+
+  const searchParams = new URLSearchParams(window.location.search)
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setUserName(e.target.value)
@@ -33,7 +36,14 @@ export const Home = () => {
       }
     }, 10000)
     if (isConected) {
-      setLocation('/board')
+      const roomUuid = searchParams.get('room')
+      if (roomUuid) {
+        socket.emit('join_room', { userName, roomUuid })
+      } else {
+        const newRoomUuid = crypto.randomUUID()
+        socket.emit('new_room', { userName, roomUuid: newRoomUuid })
+        setLocation(`/board?room=${newRoomUuid}`)
+      }
     }
   }
 
@@ -48,12 +58,31 @@ export const Home = () => {
       setIsConected(false)
     }
 
+    function onError (data: any) {
+      alert(`ocurrio un error, ${JSON.stringify(data)}`)
+    }
+
+    function onRoomFull () {
+      setcustomMessage('La partida esta llena')
+    }
+
+    function onRoomJoined (data: any) {
+      setOtherPlayerName(data?.userName ?? '')
+      setLocation(`/board?room=${searchParams.get('room') ?? ''}`)
+    }
+
     socket.on('connect', onConnect)
     socket.on('disconnect', onDisconnect)
+    socket.on('error', onError)
+    socket.on('room_full', onRoomFull)
+    socket.on('joined_room', onRoomJoined)
 
     return () => {
       socket.off('connect', onConnect)
       socket.off('disconnect', onDisconnect)
+      socket.off('error', onError)
+      socket.off('room_full', onRoomFull)
+      socket.off('joined_room', onRoomJoined)
     }
   }, [])
 
@@ -81,9 +110,16 @@ export const Home = () => {
             />
           </div>
           {
-            hasError
-              ? <p>Ha ocurrido un error, por favor intente mas tarde</p>
-              : <p>Conectando con el servidor...</p>
+            hasError && <p>Ha ocurrido un error, por favor intente mas tarde</p>
+          }
+          {
+            !hasError && !customMessage && <p>Conectando con el servidor...</p>
+          }
+          {
+            customMessage && <>
+              <p>{customMessage}</p>
+              <button className={style.btn} onClick={() => setConnectionModal(false)}>Cerrar</button>
+            </>
           }
           <Waves />
         </dialog>

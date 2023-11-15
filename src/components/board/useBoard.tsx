@@ -5,6 +5,7 @@ import { boats } from '../../config/boats'
 import { useBoardStore } from '../../context/boardContext'
 import { IBoat, IBoats } from '../../types/boards'
 import { allowedPosition, calculateOccupiedPositions, calculateAroundPositions } from '../../utils/shipPositions'
+import { socket } from '../../socket'
 
 export const useBoard = (boardPosition: React.MutableRefObject<HTMLDivElement | null>) => {
   const [allBoats, setAllBoats] = useState<IBoats>(boats)
@@ -126,7 +127,7 @@ export const useBoard = (boardPosition: React.MutableRefObject<HTMLDivElement | 
 
     const nextShip = Object.values(newBoats).find(boat => boat.spot === undefined)
     if (nextShip === undefined) {
-      console.log('ready to play')
+      socket.emit('player_ready', { shipsPosition: occupiedPositions })
     } else {
       setShipSelected(nextShip)
     }
